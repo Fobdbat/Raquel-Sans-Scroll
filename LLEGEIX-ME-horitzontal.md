@@ -1,72 +1,66 @@
-# Raquel Sans — versió apaïsada (scroll horitzontal)
+# Raquel Sans — versió apaïsada (scroll), estil retall de paper
 
-Aquesta carpeta **només conté els fitxers nous**. Es pugen al mateix lloc on ja tens el joc isomètric, perquè comparteixen dos fitxers:
+Pugeu **tots els fitxers d'aquesta carpeta** al repositori (arrossegant-los a la pàgina «Add file → Upload files» de GitHub). Es juga obrint `horitzontal.html` (o `index.html`, que hi redirigeix). Si ja hi teníeu `raquel.mp3` i `index.html` no cal tornar-los a pujar.
 
-- `raquel.mp3` (la cançó)
-- `intro.webp` (la sala d'inici)
+## La lletra (`lletra.txt`)
 
-Si ja els tens al repositori no cal tornar-los a pujar. Per jugar-hi, obre `horitzontal.html`.
+El joc **no porta cap lletra incorporada**: la llegeix d'un fitxer `lletra.txt` que ha d'estar **al costat de `horitzontal.html`**, com al joc de la Ludwig. Mentre no hi sigui, el joc va igual, sense lletra (a la pantalla d'inici hi diu «sense lletra (falta lletra.txt)»; amb la lletra posada hi diu «lletra carregada (N versos)»).
 
-## Fitxers (20 + aquest)
+- Un vers per línia, en UTF-8 (també accepta Windows-1252). Les línies buides i les marques entre claudàtors sense temps (`[Tornada]`, `[Estrofa 2]`…) s'ignoren.
+- **Sincronització automàtica**: cada vers es casa amb el tros de veu que correspon comptant síl·labes contra les frases que he detectat a l'àudio. És aproximada.
+- **Sincronització manual (opcional)**: si una línia comença amb un temps, es mostra just en aquell moment: `1:23 text`, `[1:23.5] text`. Es pot posar només a les línies que surtin desfasades.
+- Afegint `?lletra` a l'adreça (`horitzontal.html?lletra`) la pantalla d'inici mostra la llista de versos amb el temps assignat, per veure on s'han col·locat i corregir-ho amb marques de temps.
+- La lletra surt a la franja de terra, a baix; les paraules «Raquel» i «Sans» es ressalten en rosa.
+
+## «RA-QUEL SANS» a la tornada
+
+A cada tornada hi ha dues vegades «Raquel Sans» (0:46,1 i 0:52,5 · 1:37,3 i 1:43,7 · 2:41,3 i 2:47,7): **3 tocs seguits, un per síl·laba**, i el personatge salta amb cadascuna. Pel teu patró de 8 corxeres són les posicions 1, 2 i 5 (temps 1, 1& i 3 del compàs): RA (salt curt), QUEL (salt curt), SANS (salt alt d'un beat). Les 3 marques surten al terra amb la síl·laba escrita.
+
+- Finestra de toc ±95 ms (molt justa, perquè RA i QUEL són a 0,2 s). Fallar una síl·laba **no treu cors**: només trenca la ratxa i perds els punts.
+- Les tres de la mateixa vegada → «RAQUEL SANS! +200». A la pantalla final surt quantes en tens de perfectes (de 6).
+- A «Passeig» els fa tots sol.
+- En aquests 4 compassos no hi ha cap altre obstacle ni canvi de terreny.
+
+## Estil gràfic
+
+Retall de paper: cartolines amb vora irregular i ombra, vora blanca de recortable als personatges, gra de paper per sobre i fons en dues capes de paral·laxi. Tot està pre-renderitzat (mons a rajoles, com abans), així que al mòbil pesa igual que la versió anterior.
+
+## Trio (món 8)
+
+Quan van els tres junts el **Tyet que anava al darrere passa al davant**: ordre d'esquerra a dreta, Tyet de la samarreta d'ratlles (A) al darrere, Miki al mig i el Tyet de l'anorac blau (B) al davant. (A la versió isomètrica van costat a costat, no hi ha «davant/darrere» i no s'ha canviat.)
+
+## Fitxers
 
 | Fitxer | Què és |
 |---|---|
-| `horitzontal.html` | la pàgina (menú, pausa, final, avís de «gira el telèfon») |
-| `joc-h.js` | el motor del joc |
-| `data-h.js` | nivell: esdeveniments, terreny, objectes, zones |
-| `h-sprites.webp` | personatges i icones (voxel) |
-| `h-w1.bin … h-w8.bin` | el món de cada zona, a trossos (rajoles) |
-| `h-f1.webp … h-f8.webp` | capa llunyana de cada zona (parallax) |
+| `horitzontal.html`, `index.html` | pàgina i redirecció |
+| `joc-h.js`, `lletra.js` | motor del joc i carregador de la lletra |
+| `data-h.js` | nivell: esdeveniments, terreny, objectes, zones, frases de veu |
+| `h-sprites.webp`, `intro-h.webp` | personatges/icones i imatge d'inici |
+| `h-w1.bin … h-w8.bin`, `h-f1…8.webp`, `h-m1…8.webp` | terra de cada zona (rajoles), fons llunyà i fons mig |
+| `raquel.mp3` | la cançó (8,4 MB) |
+| `lletra.txt` | **el poseu vosaltres** |
 
-Pes total: uns 4,2 MB (a més dels 8,4 MB de la cançó, que ja hi és). Cap fitxer passa de 650 KB, així que la pujada per la web de GitHub no té problema.
+Pes: uns 3,6 MB de gràfics i codi més la cançó. Cap fitxer passa de 600 KB (excepte la cançó).
 
 ## Com es juga
 
-- La pantalla avança sola, a 150 BPM exactes: 1 beat = 0,4 s. El jugador no pot anar endavant ni endarrere.
-- **Un sol toc** (pantalla o espai): salta. Cada salt surt i aterra **sobre el beat**.
-- Quan el personatge s'acosta a una marca a terra, l'anell es va tancant. Toca quan es tanqui:
-  - **verd** → salt per sobre d'un obstacle (1 beat);
-  - **blau** → pujar a una plataforma (1 o 2 nivells);
-  - **taronja** → salt llarg (2 beats), per creuar un forat o un obstacle ample.
-- Les plataformes són a 3 alçades; baixar-ne és automàtic en acabar-se.
-- Objectes: monedes (amb icona pròpia per escena), cors (+1 vida) i teles amb la cara de la Raquel. Algunes es recullen només amb el salt obligatori de l'anell (si el fas ben clavat); d'altres són **bonus opcionals**: toca *a l'inici d'un beat* en un tram pla i el personatge fa un salt petit d'un beat (hi ha 14 punts així; 6 amb tele, 3 amb cor).
-- Tens 3 cors i **la música no s'atura**. Si en perds un, el personatge continua i parpelleja 1 s. Amb 0 cors tornes a l'inici de la zona, amb compte enrere. Després de 3 fallades a la mateixa zona les finestres s'eixamplen un 20 %, i després de 6, un 40 %.
-- Finestres de toc: salt normal/llarg −180 / +140 ms, pujada −200 / +160 ms. «Perfecte» = dins de ±70 ms.
-- «Passeig»: el joc toca per tu (per veure-ho tot sense perdre).
-- «Calibra el ritme»: mesura el retard de so del teu aparell i el compensa (es desa al navegador). Convé fer-ho una vegada, amb els auriculars o l'altaveu que faràs servir.
-- Si es gira el telèfon a vertical, el joc es posa en pausa i demana girar-lo.
-- Afegint `?dt` a l'adreça (`horitzontal.html?dt`) els avisos de cada salt mostren els mil·lisegons d'avançament o retard.
+- La pantalla avança a 150 BPM exactes (1 beat = 0,4 s). **Un sol toc** (pantalla o espai): salta, i sempre s'enlaira i aterra sobre el beat.
+- Marques a terra: **verd** salt per sobre d'un obstacle; **blau** pujar a una plataforma; **taronja** salt llarg (forats); **rosa amb síl·laba** els de «RA-QUEL SANS».
+- 3 cors i la música no s'atura; amb 0 cors tornes a l'inici de la zona. Després de 3 fallades a la mateixa zona les finestres s'eixamplen un 20 % (40 % després de 6).
+- «Passeig»: el joc toca per tu. «Calibra el ritme»: mesura el retard de so del teu aparell (es desa al navegador).
+- `?dt` mostra els mil·lisegons d'avançament o retard de cada salt.
 
-## El nivell
+## Què he comprovat i què NO
 
-210 salts obligatoris: 158 normals, 42 de pujada a plataforma i 10 de llargs (6 sobre forats). 28 dels salts normals són baixant d'una plataforma. 53 trams de plataforma, fins a 3 nivells. Zones (mateixes escenes que la versió isomètrica):
+**Comprovat** (Chromium sense pantalla): partida completa en temps virtual amb tots els salts perfectes, a +60 ms, a −60 ms i irregulars: 211/211 encertats, 18/18 síl·labes, 0 cors perduts, cap salt brusc d'alçada, cap error de consola; una prova en temps real de 56 s amb tocs sintètics (inclou les dues primeres tornades): 60 fps, 47/47 encertats; captures dels 8 mons i de l'escenari final en 1280×640 i 844×390.
 
-| Zona | Escena | Inici | Salts |
-|---|---|---|---|
-| 1 | Dins la tele | 0:06,7 | 6 (tutorial) |
-| 2 | De les 9 a les 10 | 0:16,3 | 22 |
-| 3 | Wall Street | 0:40,3 | 21 |
-| 4 | Telenotícies | 0:59,5 | 23 |
-| 5 | La tertúlia | 1:17,1 | 31 |
-| 6 | Zapping | 1:39,5 | 34 |
-| 7 | Quin horror | 2:01,9 | 21 |
-| 8 | Raquel Sans (trio) | 2:19,5 | 52 |
-| Final | escenari + Raquel | 2:51,5 | 3 de pujada automàtics |
+**NO comprovat — cal que ho mireu vosaltres:**
+- **Els moments exactes de «Raquel Sans» són una estimació** feta aïllant la veu de l'àudio (separació de veu + detecció d'atacs). Les sis són on toca per l'àudio, però no he pogut escoltar-ho. Si en una surt desfasada es corregeix a `data-h.js` (esdeveniments amb `"ty":"H"`, camp `k` = beat; 1 beat = 0,4 s) o dient-me els minuts.
+- **La lletra no l'he escrita ni posada jo** (no puc reproduir lletres de cançons): només el carregador. L'alineació automàtica és aproximada; cal revisar-la amb `?lletra`.
+- **Cap aparell real** (ni mòbil ni Safari ni Firefox). La latència d'àudio varia molt segons l'aparell; per això hi ha el calibratge.
+- **Les durades de les escenes són una estimació** (no tinc el vídeo): els canvis d'escena poden estar desfasats uns segons respecte del videoclip.
+- **La dificultat** no l'ha provat cap persona. Les finestres de toc de «RA-QUEL SANS» (±95 ms) són més estretes que les de la resta.
+- Les cares dels personatges són aproximades.
 
-## Què està comprovat i què NO
-
-**Comprovat (amb Chromium sense pantalla, en temps virtual i una prova en temps real):**
-- Ritme: 150,000 BPM constant, beat 0,400 s; tots els salts s'enlairen i aterren a un beat exacte; recorregut complet amb els 210 salts perfectes, amb tots amb +100 ms, amb tots amb −100 ms i amb retards irregulars: 210/210 encertats, 0 cors perduts, cap salt brusc de l'alçada del personatge.
-- Els 183 objectes (170 monedes, 7 cors, 6 teles) es poden recollir en una partida perfecta; els dels 14 punts de bonus requereixen el toc a l'inici del beat.
-- Fallades: perdre cors, parpelleig, reinici de zona amb compte enrere, final amb estadístiques i enllaços a YouTube i Spotify.
-- Una prova en temps real de 45 s amb tocs sintètics 50 ms tard: 31/31 encertats.
-
-**No comprovat — cal que ho miris tu:**
-- **Cap aparell real** (ni mòbil ni Safari ni Firefox). La latència d'àudio de cada telèfon pot variar molt; per això hi ha el calibratge.
-- **Les durades de les escenes són una estimació** (no tinc accés al vídeo): els canvis d'escena poden estar desfasats uns segons respecte del videoclip. Es corregeixen a `data-h.js` (camps `t0`/`t1`/`b0`/`b1` de cada zona) o em dius els minuts i ho refaig.
-- **El to visual** només l'he validat amb captures: paletes, plataformes i personatges poden agradar-te o no.
-- **La dificultat** no l'ha provat cap persona. Les finestres de toc són les mateixes que vam fer servir a la versió isomètrica; en un mòbil amb pantalla tàctil poden ser massa estretes o massa amples.
-- Quan s'erra un salt no hi ha cap «teletransport»: el personatge fa la mateixa trajectòria amb la pose de cop i parpelleja (xoc contra l'obstacle, contra la paret de la plataforma o caiguda al forat i sortida). És una simplificació.
-- La memòria: el món es carrega en rajoles de 512 px amb `createImageBitmap` i només n'hi ha unes quantes a la vegada, però en mòbils molt antics no ho he pogut provar.
-
-No s'hi ha afegit GoatCounter ni cap lletra de la cançó.
+No s'hi ha afegit GoatCounter.
