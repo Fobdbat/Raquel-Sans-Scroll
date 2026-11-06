@@ -10,7 +10,9 @@ const WIN={S:[.18,.14],U:[.2,.16],L:[.18,.14],H:[.095,.095]};
 const PERFECTE=.07,DBG=/[?&]dt\b/.test(location.search);
 const ms=d=>(d>0?'+':d<0?'−':'')+Math.abs(Math.round(d*1000))+' ms';
 let W=0,H=0,DPR=1,f=.6;
-function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(2,devicePixelRatio||1);cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);cx.setTransform(DPR,0,0,DPR,0,0);
+const SF={l:0,r:0,t:0,b:0};
+function mesuraSafe(){try{const d=document.createElement('div');d.style.cssText='position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';document.body.appendChild(d);const c=getComputedStyle(d);SF.t=parseFloat(c.paddingTop)||0;SF.r=parseFloat(c.paddingRight)||0;SF.b=parseFloat(c.paddingBottom)||0;SF.l=parseFloat(c.paddingLeft)||0;d.remove()}catch(e){}}
+function resize(){W=innerWidth;H=innerHeight;mesuraSafe();DPR=Math.min(2,devicePixelRatio||1);cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);cx.setTransform(DPR,0,0,DPR,0,0);
   f=Math.max(W/1280,H/640);}
 addEventListener('resize',()=>{resize();try{if(G.on&&!G.paused&&!G.fin&&matchMedia('(orientation:portrait) and (max-aspect-ratio:1/1)').matches)pausa()}catch(e){}});resize();
 
@@ -331,22 +333,23 @@ function render(T){
 /* lletra de la cançó, a la franja de terra */
 function lletraHud(T){
   const l=LYR.length?RSLletra.actual(LYR,T):null;if(!l)return;
-  const a=Math.max(0,Math.min(1,(T-l.t)/.15+.05,(l.te-T)/.25)),maxw=W-28;let px=Math.round(Math.max(16,Math.min(30,W/30))),lines=[l.text];
+  const a=Math.max(0,Math.min(1,(T-l.t)/.15+.05,(l.te-T)/.25)),mg=14+Math.max(SF.l,SF.r),maxw=W-2*mg;let px=Math.round(Math.max(13,Math.min(26,W/34,H/16))),lines=[l.text];
   cx.save();cx.font='800 '+px+'px system-ui,sans-serif';let w0=cx.measureText(l.text).width;
-  if(w0>maxw){px=Math.max(13,Math.floor(px*maxw/w0));cx.font='800 '+px+'px system-ui,sans-serif';w0=cx.measureText(l.text).width}
+  if(w0>maxw){px=Math.max(12,Math.floor(px*maxw/w0));cx.font='800 '+px+'px system-ui,sans-serif';w0=cx.measureText(l.text).width}
   if(w0>maxw){const mid=l.text.length/2;let c=-1,bd=1e9;for(let i=0;i<l.text.length;i++)if(l.text[i]===' '&&Math.abs(i-mid)<bd){bd=Math.abs(i-mid);c=i}if(c>0)lines=[l.text.slice(0,c),l.text.slice(c+1)]}
-  const lw=lines.map(s=>cx.measureText(s).width),bw=Math.min(maxw,Math.max(...lw))+px*1.4,bh=lines.length*px*1.28+px*.7,bx=(W-bw)/2,by=H-bh-Math.max(10,H*.03);
-  cx.globalAlpha=a;plate(bx,by,bw,bh,px*.5);cx.textBaseline='middle';cx.textAlign='left';
-  lines.forEach((s,i)=>{let x=(W-lw[i])/2;const y=by+px*.35+(i+.5)*px*1.28;for(const w of s.split(/(\s+)/)){const ww=cx.measureText(w).width;cx.fillStyle=/raquel|sans/i.test(w)?'#d9387f':INK;cx.fillText(w,x,y);x+=ww}});
+  const lw=lines.map(s=>cx.measureText(s).width),bw=Math.min(maxw,Math.max(...lw))+px*1.2,bh=lines.length*px*1.25+px*.5,bx=(W-bw)/2,by=H-bh-Math.max(6,H*.02)-SF.b;
+  cx.globalAlpha=a;cx.fillStyle='rgba(43,29,18,.32)';rr(bx,by,bw,bh,px*.55);cx.fill();      // globus translúcid: deixa veure el terra i les marques
+  cx.textBaseline='middle';cx.textAlign='left';cx.lineJoin='round';cx.lineWidth=Math.max(2,px/4.6);cx.strokeStyle='rgba(43,29,18,.9)';
+  lines.forEach((s,i)=>{let x=(W-lw[i])/2;const y=by+px*.25+(i+.5)*px*1.25;for(const w of s.split(/(\s+)/)){const ww=cx.measureText(w).width;cx.strokeText(w,x,y);cx.fillStyle=/raquel|sans/i.test(w)?'#ff8cc2':CREAM;cx.fillText(w,x,y);x+=ww}});
   cx.restore()}
 function hud(T,zi){
   if(!G.on)return;
-  const pw=W-24,x0=12,y0=7;cx.fillStyle='rgba(43,29,18,.3)';rr(x0,y0,pw,6,3);cx.fill();
+  const x0=12+SF.l,pw=W-24-SF.l-SF.r,y0=7+SF.t;cx.fillStyle='rgba(43,29,18,.3)';rr(x0,y0,pw,6,3);cx.fill();
   cx.fillStyle='#c4572f';rr(x0,y0,Math.max(6,pw*Math.max(0,Math.min(1,T/DUR))),6,3);cx.fill();cx.fillStyle=CREAM;for(const z of ZN)cx.fillRect(x0+pw*z.t0/DUR-1,y0-2,2,10);
-  if(G.mode==='joc'){plate(12,20,Math.max(74,String(G.score).length*17+28),34,10);cx.fillStyle=INK;cx.font='800 22px system-ui,sans-serif';cx.textAlign='left';cx.textBaseline='middle';cx.fillText(String(G.score),24,38);
-    if(G.combo>=3)pill('×'+G.combo,40,72,16,'#d9387f');
-    const hm=R.spr.atles.it.heart;if(hm&&sprOk){const w=30,h=w*hm[3]/hm[2];for(let i=0;i<3;i++){cx.globalAlpha=i<G.hearts?1:.25;cx.drawImage(SPR,hm[0],hm[1],hm[2],hm[3],W-80-(w+3)*(3-i),20,w,h)}cx.globalAlpha=1}}
-  else{plate(12,20,104,30,10);txt('PASSEIG',64,35,15,'#4fae5a')}
+  if(G.mode==='joc'){plate(x0,20+SF.t,Math.max(74,String(G.score).length*17+28),34,10);cx.fillStyle=INK;cx.font='800 22px system-ui,sans-serif';cx.textAlign='left';cx.textBaseline='middle';cx.fillText(String(G.score),x0+12,38+SF.t);
+    if(G.combo>=3)pill('×'+G.combo,x0+28,72+SF.t,16,'#d9387f');
+    const hm=R.spr.atles.it.heart;if(hm&&sprOk){const w=30,h=w*hm[3]/hm[2];for(let i=0;i<3;i++){cx.globalAlpha=i<G.hearts?1:.25;cx.drawImage(SPR,hm[0],hm[1],hm[2],hm[3],W-80-SF.r-(w+3)*(3-i),20+SF.t,w,h)}cx.globalAlpha=1}}
+  else{plate(x0,20+SF.t,104,30,10);txt('PASSEIG',x0+52,35+SF.t,15,'#4fae5a')}
   const z=ZN[zi];if(zi>=1&&zi===G.cd&&T<z.t0+.35&&T>z.t0-1.25){const q=z.t0-T,n=q>.8?3:q>.4?2:q>0?1:0;txt(n?String(n):'Va!',W/2,H*.45,Math.round(Math.min(W,H)*.22),'#f4b73a')}
   if(G.assistMsg&&T-G.assistMsg<3.5&&T>=G.assistMsg)txt('Ajuda activada: finestres una mica més amples',W/2,H*.62,14,'#9be08a');
   if(G.mode==='joc'&&!G.fail){for(let i=G.ni;i<EV.length;i++){const e=EV[i];if(e.st!==0||e.auto)continue;
@@ -371,8 +374,14 @@ $('pau').onclick=pausa;$('b-continua').onclick=continua;
 $('b-mode').onclick=()=>{G.mode=G.mode==='joc'?'passeig':'joc';$('b-mode').textContent=G.mode==='joc'?'Passa a «Passeig»':'Passa a «Joc»'};
 $('b-surt').onclick=()=>{G.on=false;G.paused=false;$('pausa').hidden=true;$('top').hidden=true;$('inici').hidden=false;atura(true)};
 $('b-torna').onclick=()=>{$('fi').hidden=true;$('inici').hidden=false;G.fin=false};
-$('b-fs').onclick=async()=>{try{const el=document.documentElement;if(!document.fullscreenElement){await (el.requestFullscreen||el.webkitRequestFullscreen).call(el);try{await screen.orientation.lock('landscape')}catch(e){}}else document.exitFullscreen()}catch(e){}};
-if(!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen))$('b-fs').hidden=true;
+const fsOn=()=>document.fullscreenElement||document.webkitFullscreenElement;
+const jaApp=(()=>{try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+if(jaApp)$('b-fs').hidden=true;
+$('b-fs').onclick=async()=>{const el=document.documentElement;
+  try{if(fsOn()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
+    const rq=el.requestFullscreen||el.webkitRequestFullscreen;if(rq){await rq.call(el);try{await screen.orientation.lock('landscape')}catch(e){}}}catch(e){}
+  setTimeout(()=>{if(!fsOn())$('ajuda-fs').hidden=false},500)};
+$('b-fs-ok').onclick=()=>{$('ajuda-fs').hidden=true};
 
 /* ---------- calibrar el ritme ---------- */
 const CAL={actiu:false,tocs:[],n:16,t:null};

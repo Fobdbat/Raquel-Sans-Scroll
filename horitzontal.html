@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#2b1d12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Raquel Sans">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="manifest" href="manifest-h.webmanifest">
 <title>Raquel Sans — joc de ritme (apaïsat)</title>
 <style>
 :root{--bg:#2b1d12;--paper:#fbf6ec;--ink:#2b1d12;--accent:#f4b73a;--terra:#c4572f;--pink:#d9387f;--teal:#2fa6c6}
@@ -37,6 +43,7 @@ button[disabled]{opacity:.5}
 .llista{display:grid;grid-template-columns:auto auto;gap:3px 18px;font-size:clamp(14px,2.6vw,17px);text-align:left}
 .llista b{color:var(--accent);text-align:right}
 #lletra-dbg{max-height:34vh;overflow:auto;margin:0;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.35);color:#f1e7d3;font:12px/1.35 ui-monospace,Menlo,monospace;text-align:left;max-width:min(92vw,640px);touch-action:pan-y;user-select:text;-webkit-user-select:text}
+#ajuda-fs{background:rgba(43,29,18,.98);z-index:6}
 #gira{position:fixed;inset:0;z-index:9;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);text-align:center;padding:24px}
 #gira .tel{width:64px;height:104px;border:5px solid var(--accent);border-radius:14px;animation:gira 2.2s ease-in-out infinite}
 @keyframes gira{0%,25%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
@@ -82,6 +89,14 @@ button[disabled]{opacity:.5}
     <a class="bt" id="l-sp" href="https://open.spotify.com/track/1yvKCdwKaTYYQNA3SrcdSK?si=QhAB_Vm2QvWAJ8p1vWZn1A&amp;utm_source=copy-link" target="_blank" rel="noopener">♪ Escolta-la a Spotify</a>
   </div>
   <div class="fila"><button id="b-torna" class="sec">Torna a jugar</button></div>
+</section>
+
+<section id="ajuda-fs" class="pant" hidden>
+  <h2>Més pantalla per jugar</h2>
+  <p>Aquest navegador no deixa que una pàgina es posi sola en pantalla completa (a l'iPhone, Safari no ho permet). Dues maneres de treure les pestanyes:</p>
+  <p><b>1. Instal·la-la:</b> toca <b>Comparteix</b> → <b>«Afegeix a la pantalla d'inici»</b> (amb «Obre com a aplicació web» activat) i obre el joc des de la icona nova: s'obre sense pestanyes ni barra.</p>
+  <p><b>2. Sense instal·lar:</b> toca el nom de la pàgina, a la barra de dalt, i tria <b>«Amaga la barra d'eines»</b> (el menú pot variar segons la versió d'iOS).</p>
+  <div class="fila"><button id="b-fs-ok">D'acord</button></div>
 </section>
 
 <div id="gira"><div class="tel"></div><h2>Gira el telèfon</h2><p>Aquest joc es juga en horitzontal.</p></div>

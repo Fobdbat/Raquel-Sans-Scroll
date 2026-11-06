@@ -10,7 +10,7 @@ El joc **no porta cap lletra incorporada**: la llegeix d'un fitxer `lletra.txt` 
 - **Sincronització automàtica**: cada vers es casa amb el tros de veu que correspon comptant síl·labes contra les frases que he detectat a l'àudio. És aproximada.
 - **Sincronització manual (opcional)**: si una línia comença amb un temps, es mostra just en aquell moment: `1:23 text`, `[1:23.5] text`. Es pot posar només a les línies que surtin desfasades.
 - Afegint `?lletra` a l'adreça (`horitzontal.html?lletra`) la pantalla d'inici mostra la llista de versos amb el temps assignat, per veure on s'han col·locat i corregir-ho amb marques de temps.
-- La lletra surt a la franja de terra, a baix; les paraules «Raquel» i «Sans» es ressalten en rosa.
+- La lletra surt a baix en un globus translúcid (es veu el terra i les marques a través); les paraules «Raquel» i «Sans» es ressalten en rosa.
 
 ## «RA-QUEL SANS» a la tornada
 
@@ -20,6 +20,10 @@ A cada tornada hi ha dues vegades «Raquel Sans» (0:46,1 i 0:52,5 · 1:37,3 i 1
 - Les tres de la mateixa vegada → «RAQUEL SANS! +200». A la pantalla final surt quantes en tens de perfectes (de 6).
 - A «Passeig» els fa tots sol.
 - En aquests 4 compassos no hi ha cap altre obstacle ni canvi de terreny.
+
+## Pantalla completa (mòbil)
+
+El botó «Pantalla completa» funciona als navegadors que ho permeten (Chrome d'Android, ordinador). **A l'iPhone, Safari no deixa que una pàgina es posi en pantalla completa**; si no s'hi posa, el joc ensenya les dues alternatives: instal·lar-lo a la pantalla d'inici (Comparteix → «Afegeix a la pantalla d'inici»; es porta amb `manifest-h.webmanifest` i les icones `icona-*.png`) o «Amaga la barra d'eines» del menú de la pàgina. Les marques del joc respecten l'osca i la barra inferior.
 
 ## Estil gràfic
 
@@ -38,6 +42,7 @@ Quan van els tres junts el **Tyet que anava al darrere passa al davant**: ordre 
 | `data-h.js` | nivell: esdeveniments, terreny, objectes, zones, frases de veu |
 | `h-sprites.webp`, `intro-h.webp` | personatges/icones i imatge d'inici |
 | `h-w1.bin … h-w8.bin`, `h-f1…8.webp`, `h-m1…8.webp` | terra de cada zona (rajoles), fons llunyà i fons mig |
+| `manifest-h.webmanifest`, `icona-180/192/512.png` | per instal·lar-lo a la pantalla d'inici |
 | `raquel.mp3` | la cançó (8,4 MB) |
 | `lletra.txt` | **el poseu vosaltres** |
 
