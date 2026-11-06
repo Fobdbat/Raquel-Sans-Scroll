@@ -1,7 +1,8 @@
 'use strict';
 /* Lletra de «Raquel Sans». El joc la llegeix de lletra.txt (al costat de l'index): no en porta cap de còpia incorporada.
-   Una línia per vers. Cada línia es casa amb el seu tros de veu (les frases detectades a l'àudio) comptant síl·labes;
-   si vols forçar el moment d'una línia, comença-la amb el temps: «1:23 text» o «[1:23.5] text».
+   Una línia per vers. El moment de cada vers ve d'una taula (TAULA, només nombres) obtinguda de la veu aïllada de la cançó i
+   comprovada amb reconeixement de parla; si lletra.txt no té els mateixos versos, es casen amb els trams de veu comptant síl·labes.
+   Si vols forçar el moment d'una línia, comença-la amb el temps: «1:23 text» o «[1:23.5] text».
    Les línies entre claudàtors sense temps ([Tornada], [Estrofa 2]…) s'ignoren. */
 (function () {
   const sil = s => { s = String(s).toLowerCase().replace(/q[uü](?=[eiéèí])/g, 'q').replace(/g[u](?=[eiéèí])/g, 'g'); const m = s.match(/[ïü]|[aeiouàèéíòóú]+/g); return m ? m.length : 0 };
@@ -46,8 +47,20 @@
     }
     return res;
   }
+  /* Moments de cada vers (només nombres): inici, final i síl·labes del vers (per saber si lletra.txt és la mateixa).
+     Obtinguts de la veu aïllada i verificats amb reconeixement de parla; si lletra.txt té un altre nombre de versos, es torna al càlcul automàtic. */
+  const TAULA = { t: [4.37,7.59,10.81,13.99,17.81,20.1,23.5,26.7,30.1,33.31,36.53,39.77,42.91,45.97,54.9,58.78,61.97,65.3,67.83,71,72.64,75.33,81.26,84.52,87.72,90.97,94.11,97.17,105.34,108.54,111.74,114.94,118.14,121.34,124.54,127.74,130.9,132.8,138.2,145.3,148.51,151.72,154.97,158.11,161.16],
+    e: [7.59,10.81,13.99,17.81,20.1,23.5,26.7,30.1,33.31,36.53,39.77,42.91,45.97,54.9,58.78,61.97,65.3,67.83,71,72.64,74.78,81.26,84.52,87.72,90.97,94.11,97.17,105.34,108.54,111.74,114.94,118.14,121.34,124.54,127.74,130.9,132.8,138.2,145.3,148.51,151.72,154.97,158.11,161.16,172.35],
+    f: [8,10,10,12,8,10,13,6,9,8,9,11,6,7,12,10,14,8,15,8,10,12,9,8,9,11,6,7,10,10,10,10,10,10,10,10,6,13,14,8,8,9,11,6,7] };
+  /* la taula només s'aplica si lletra.txt és (quasi) la mateixa: mateix nombre de versos, síl·labes semblants, cap temps manual */
+  function usaTaula(L) {
+    if (L.length !== TAULA.t.length || L.some(l => l.t != null)) return false;
+    let ok = 0; for (let i = 0; i < L.length; i++) if (Math.abs(L[i].f - TAULA.f[i]) <= 2) ok++;
+    return ok >= .85 * L.length;
+  }
   function llegeix(txt, FR) {
     const L = parseLinies(txt); if (!L.length) return [];
+    if (usaTaula(L)) return L.map((l, i) => ({ text: l.text, t: TAULA.t[i], te: TAULA.e[i] }));
     const pos = FR && FR.length ? casa(L, FR) : new Array(L.length).fill(null);
     // temps: marca manual > tram detectat > interpolació entre veïnes
     const t = L.map((l, i) => l.t != null ? { a: l.t, b: null } : pos[i]);
@@ -62,5 +75,5 @@
   }
   const carrega = (url, FR) => fetch(url, { cache: 'no-cache' }).then(r => r.ok ? r.arrayBuffer() : null).then(b => b ? llegeix(decodifica(b), FR) : []).catch(() => []);
   function actual(arr, T) { let l = null; for (const x of arr) { if (x.t <= T + .02) l = x; else break } return l && T < l.te ? l : null }
-  window.RSLletra = { carrega, llegeix, actual, sil };
+  window.RSLletra = { carrega, llegeix, actual, sil, parseLinies, taula: TAULA };
 })();
